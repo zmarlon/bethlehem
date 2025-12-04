@@ -17,6 +17,10 @@ pub enum Error {
     #[error("Unknown error")]
     Unknown,
 
+    #[cfg(feature = "sdl")]
+    #[error("Sdl error: {0}")]
+    SdlError(#[from] sdl3::Error),
+
     #[cfg(feature = "vulkan")]
     #[error("Vulkan loading error: {0}")]
     VulkanLoadingError(#[from] ash::LoadingError),

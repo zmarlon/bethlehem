@@ -1,5 +1,5 @@
 use crate::backend::vulkan::VulkanPhysicalDevice;
-use crate::{Error, InstanceDesc, PhysicalDevice};
+use crate::{Error, InstanceDesc, PhysicalDevice, WindowHandle};
 use ash::vk;
 use libc::strcmp;
 use std::ffi::CString;
@@ -21,9 +21,26 @@ impl VulkanInstance {
             .engine_name(engine_name.as_c_str())
             .application_name(application_name.as_c_str());
 
+        let mut platform_extensions = vec![];
+        let mut enabled_extension_names = vec![];
+
+        match desc.window_handle {
+            WindowHandle::Sdl(sdl_window) => {
+                platform_extensions = sdl_window
+                    .vulkan_instance_extensions()?
+                    .into_iter()
+                    .map(|ext| Ok(CString::new(ext)?))
+                    .collect::<Result<Vec<CString>, Error>>()?;
+            }
+        }
+
+        for extension in &platform_extensions {
+            enabled_extension_names.push(extension.as_c_str().as_ptr());
+        }
+
         let instance_create_info = vk::InstanceCreateInfo::default()
             .application_info(&application_info)
-            .enabled_extension_names(&[])
+            .enabled_extension_names(&enabled_extension_names)
             .enabled_layer_names(&[]);
 
         let entry = unsafe { ash::Entry::load()? };

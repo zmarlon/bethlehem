@@ -33,10 +33,15 @@ impl Instance {
     }
 }
 
-#[derive(Clone, Debug)]
 pub struct InstanceDesc<'a> {
     pub backend_type: BackendType,
     pub debug: bool,
     pub engine_name: &'a str,
     pub application_name: &'a str,
+    pub window_handle: WindowHandle<'a>,
+}
+
+pub enum WindowHandle<'a> {
+    #[cfg(feature = "sdl")]
+    Sdl(&'a sdl3::video::Window),
 }
