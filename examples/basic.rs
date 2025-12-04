@@ -36,6 +36,28 @@ fn main() {
         })
         .unwrap();
 
+    let mesh_shader = device.create_shader_module(&ShaderDesc {
+        name: "Mesh shader".into(),
+        source: ShaderSource::Hlsl {
+            source: MESH_SHADER.into(),
+            defines: vec![]
+        },
+        kind: ShaderKind::Mesh,
+        entry_point: "ms_main".into(),
+    }).unwrap();
+
+    let fragment_shader = device.create_shader_module(&ShaderDesc {
+        name: "Fragment shader".into(),
+        source: ShaderSource::Hlsl {
+            source: FRAGMENT_SHADER.into(),
+            defines: vec![],
+        },
+        kind: ShaderKind::Fragment,
+        entry_point: "fs_main".into(),
+    });
+
+    //Game loop
+
     let mut event_pump = sdl.event_pump().unwrap();
 
     let mut running = true;
@@ -51,3 +73,40 @@ fn main() {
         }
     }
 }
+
+static MESH_SHADER: &'static str = r#"
+struct MSOutput {
+    float4 Position: SV_Position;
+    float3 Color: COLOR0;
+};
+
+[NumThreads(1, 1, 1)]
+[OutputTopology("triangle")]
+void ms_main(uint gtid: SV_GroupThreadID, uint gid: SV_GroupID, out indices uint3 triangles[124], out vertices MSOutput vertices[64]) {
+    SetMeshOutputCounts(3, 1);
+    triangles[0] = uint3(0, 1, 2);
+
+    vertices[0].Position = float4(-0.5, 0.5, 0.0, 1.0);
+    vertices[0].Color = float3(1.0, 0.0, 0.0);
+
+    vertices[1].Position = float4(0.5, 0.5, 0.0, 1.0);
+    vertices[1].Color = float3(0.0, 1.0, 0.0);
+
+    vertices[2].Position = float4(0.0, -0.5, 0.0, 1.0);
+    vertices[2].Color = float3(0.0, 0.0, 1.0);
+}
+"#;
+
+static FRAGMENT_SHADER: &'static str = r#"
+struct PSOutput {
+    float4 color : SV_Target0;
+};
+
+PSOutput fs_main() {
+    PSOutput output;
+    output.color = float4(0.0, 1.0, 0.0, 1.0);
+    return output;
+}
+"#;
+
+
