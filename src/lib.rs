@@ -26,6 +26,8 @@ pub enum Error {
     #[cfg(feature = "vulkan")]
     #[error("Vulkan loading error: {0}")]
     VulkanLoadingError(#[from] ash::LoadingError),
+    #[error("Vulkan Queue Family not found")]
+    VulkanQueueFamilyNotFound,
 
     #[cfg(feature = "vulkan")]
     #[error("Vulkan error: {0}")]
