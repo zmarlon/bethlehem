@@ -1,0 +1,13 @@
+[package]
+name = "bethlehem"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ash = "0.38.0+1.3.281"
+libc = "1.0.0-alpha.1"
+thiserror = "2.0.17"
+
+[features]
+vulkan = []
+default = ["vulkan"]
