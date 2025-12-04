@@ -1,5 +1,5 @@
-use crate::backend::vulkan::VulkanPhysicalDevice;
-use crate::{Error, InstanceDesc, PhysicalDevice, WindowHandle};
+use crate::backend::vulkan::{VulkanDevice, VulkanPhysicalDevice};
+use crate::{Device, DeviceDesc, Error, InstanceDesc, PhysicalDevice, WindowHandle};
 use ash::vk;
 use libc::strcmp;
 use std::ffi::CString;
@@ -22,6 +22,13 @@ impl VulkanInstance {
             .application_name(application_name.as_c_str());
 
         let mut platform_extensions = vec![];
+
+        let mut enabled_layer_names = vec![];
+
+        if desc.debug {
+            enabled_layer_names.push(c"VK_LAYER_KHRONOS_validation".as_ptr());
+        }
+
         let mut enabled_extension_names = vec![];
 
         match desc.window_handle {
@@ -40,8 +47,8 @@ impl VulkanInstance {
 
         let instance_create_info = vk::InstanceCreateInfo::default()
             .application_info(&application_info)
-            .enabled_extension_names(&enabled_extension_names)
-            .enabled_layer_names(&[]);
+            .enabled_layer_names(&enabled_layer_names)
+            .enabled_extension_names(&enabled_extension_names);
 
         let entry = unsafe { ash::Entry::load()? };
 
@@ -91,5 +98,25 @@ impl VulkanInstance {
             .collect::<Result<Vec<_>, Error>>()?;
 
         Ok(physical_devices)
+    }
+
+    pub fn create_device(&self, desc: &DeviceDesc) -> Result<Device, Error> {
+        let queue_create_infos = [];
+
+        let extensions = [c"VK_KHR_swapchain".as_ptr(), c"VK_EXT_mesh_shader".as_ptr()];
+
+        let device_create_info = vk::DeviceCreateInfo::default()
+            .enabled_extension_names(&extensions)
+            .queue_create_infos(&queue_create_infos);
+
+        let device = unsafe {
+            self.instance.create_device(
+                desc.physical_device.as_vulkan_physical_device().handle,
+                &device_create_info,
+                None,
+            )?
+        };
+
+        Ok(Device::Vulkan(Arc::new(VulkanDevice::new(device)?)))
     }
 }

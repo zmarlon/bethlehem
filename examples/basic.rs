@@ -14,7 +14,7 @@ fn main() {
     //Api Code
     let instance = Instance::new(&InstanceDesc {
         backend_type: BackendType::Vulkan,
-        debug: false,
+        debug: true,
         engine_name: "Test Engine",
         application_name: "Test App",
         window_handle: WindowHandle::Sdl(&window),
@@ -28,6 +28,12 @@ fn main() {
     for physical_device in &physical_devices {
         println!("Found physical device: {}", physical_device.name());
     }
+
+    let device = instance
+        .create_device(&DeviceDesc {
+            physical_device: physical_devices.first().unwrap(),
+        })
+        .unwrap();
 
     let mut event_pump = sdl.event_pump().unwrap();
 

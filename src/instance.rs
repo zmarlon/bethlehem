@@ -1,4 +1,4 @@
-use crate::{BackendType, Error, PhysicalDevice};
+use crate::{BackendType, Device, Error, PhysicalDevice};
 use std::sync::Arc;
 
 #[cfg(feature = "vulkan")]
@@ -25,6 +25,13 @@ impl Instance {
         }
     }
 
+    pub fn create_device(&self, desc: &DeviceDesc) -> Result<Device, Error> {
+        match self {
+            #[cfg(feature = "vulkan")]
+            Instance::Vulkan(vulkan_instance) => vulkan_instance.create_device(desc),
+        }
+    }
+
     pub fn backend(&self) -> BackendType {
         match self {
             #[cfg(feature = "vulkan")]
@@ -44,4 +51,8 @@ pub struct InstanceDesc<'a> {
 pub enum WindowHandle<'a> {
     #[cfg(feature = "sdl")]
     Sdl(&'a sdl3::video::Window),
+}
+
+pub struct DeviceDesc<'a> {
+    pub physical_device: &'a PhysicalDevice,
 }

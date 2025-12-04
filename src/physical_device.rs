@@ -15,4 +15,12 @@ impl PhysicalDevice {
             PhysicalDevice::Vulkan(vulkan_physical_device) => &vulkan_physical_device.name,
         }
     }
+
+    #[cfg(feature = "vulkan")]
+    pub fn as_vulkan_physical_device(&self) -> &VulkanPhysicalDevice {
+        match self {
+            PhysicalDevice::Vulkan(vulkan_physical_device) => vulkan_physical_device,
+            _ => unreachable!(),
+        }
+    }
 }
