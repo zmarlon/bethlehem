@@ -3,7 +3,7 @@ use std::sync::Arc;
 #[cfg(feature = "vulkan")]
 use crate::backend::vulkan::*;
 use crate::shader_module::ShaderDesc;
-use crate::{Error, ShaderModule};
+use crate::{Error, PhysicalDevice, ShaderModule};
 
 pub enum Device {
     #[cfg(feature = "vulkan")]
@@ -15,6 +15,14 @@ impl Device {
         match self {
             #[cfg(feature = "vulkan")]
             Device::Vulkan(vulkan_device) => vulkan_device.create_shader_module(desc),
+        }
+    }
+
+    #[cfg(feature = "vulkan")]
+    pub fn as_vulkan_device(&self) -> &Arc<VulkanDevice> {
+        match self {
+            Device::Vulkan(vulkan_device) => vulkan_device,
+            _ => unreachable!(),
         }
     }
 }

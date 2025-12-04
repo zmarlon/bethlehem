@@ -17,17 +17,9 @@ impl PhysicalDevice {
     }
 
     #[cfg(feature = "vulkan")]
-    pub fn as_vulkan_physical_device(&self) -> &VulkanPhysicalDevice {
+    pub fn as_vulkan_physical_device(&self) -> &Arc<VulkanPhysicalDevice> {
         match self {
             PhysicalDevice::Vulkan(vulkan_physical_device) => vulkan_physical_device,
-            _ => unreachable!(),
-        }
-    }
-
-    #[cfg(feature = "vulkan")]
-    pub fn as_vulkan_physical_device_cloned(&self) -> Arc<VulkanPhysicalDevice> {
-        match self {
-            PhysicalDevice::Vulkan(vulkan_physical_device) => vulkan_physical_device.clone(),
             _ => unreachable!(),
         }
     }

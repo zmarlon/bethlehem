@@ -10,10 +10,11 @@ fn get_target(stage: ShaderKind) -> &'static str {
     }
 }
 
-pub fn compile_shader(desc: &ShaderDesc, spirv: bool) -> Result<Vec<u8>, Error> {
-    let mut args = vec![];
+pub fn compile_hlsl(desc: &ShaderDesc, spirv: bool) -> Result<Vec<u8>, Error> {
+    let mut args = vec!["-HV 2021"];
     if spirv {
         args.push("-spirv");
+        args.push("-fspv-target-env=vulkan1.3")
     }
 
     match &desc.source {
