@@ -154,7 +154,10 @@ impl VulkanInstance {
                 .create_device(vulkan_physical_device.handle, &device_create_info, None)?
         };
 
-        Ok(Device::Vulkan(Arc::new(VulkanDevice::new(device)?)))
+        Ok(Device::Vulkan(Arc::new(VulkanDevice::new(
+            desc.physical_device.as_vulkan_physical_device_cloned(),
+            device,
+        )?)))
     }
 }
 
