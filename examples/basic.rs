@@ -36,25 +36,29 @@ fn main() {
         })
         .unwrap();
 
-    let mesh_shader = device.create_shader_module(&ShaderDesc {
-        name: "Mesh shader".into(),
-        source: ShaderSource::Hlsl {
-            source: MESH_SHADER.into(),
-            defines: vec![]
-        },
-        kind: ShaderKind::Mesh,
-        entry_point: "ms_main".into(),
-    }).unwrap();
+    let mesh_shader = device
+        .create_shader_module(&ShaderDesc {
+            name: "Mesh shader".into(),
+            source: ShaderSource::Hlsl {
+                source: MESH_SHADER.into(),
+                defines: vec![],
+            },
+            kind: ShaderKind::Mesh,
+            entry_point: "ms_main".into(),
+        })
+        .unwrap();
 
-    let fragment_shader = device.create_shader_module(&ShaderDesc {
-        name: "Fragment shader".into(),
-        source: ShaderSource::Hlsl {
-            source: FRAGMENT_SHADER.into(),
-            defines: vec![],
-        },
-        kind: ShaderKind::Fragment,
-        entry_point: "fs_main".into(),
-    });
+    let fragment_shader = device
+        .create_shader_module(&ShaderDesc {
+            name: "Fragment shader".into(),
+            source: ShaderSource::Hlsl {
+                source: FRAGMENT_SHADER.into(),
+                defines: vec![],
+            },
+            kind: ShaderKind::Fragment,
+            entry_point: "fs_main".into(),
+        })
+        .unwrap();
 
     //Game loop
 
@@ -108,5 +112,3 @@ PSOutput fs_main() {
     return output;
 }
 "#;
-
-

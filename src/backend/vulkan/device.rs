@@ -1,7 +1,7 @@
-use crate::{Error, ShaderModule};
 use crate::backend::vulkan::VulkanPhysicalDevice;
-use std::sync::Arc;
 use crate::shader_module::ShaderDesc;
+use crate::{Error, ShaderModule};
+use std::sync::Arc;
 
 pub struct VulkanDevice {
     physical_device: Arc<VulkanPhysicalDevice>,
