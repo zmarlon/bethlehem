@@ -1,4 +1,5 @@
 use crate::{BackendType, Device, Error, PhysicalDevice};
+use std::borrow::Cow;
 use std::sync::Arc;
 
 #[cfg(feature = "vulkan")]
@@ -43,8 +44,8 @@ impl Instance {
 pub struct InstanceDesc<'a> {
     pub backend_type: BackendType,
     pub debug: bool,
-    pub engine_name: &'a str,
-    pub application_name: &'a str,
+    pub engine_name: Cow<'a, str>,
+    pub application_name: Cow<'a, str>,
     pub window_handle: WindowHandle<'a>,
 }
 

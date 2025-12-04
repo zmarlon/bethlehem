@@ -13,8 +13,8 @@ pub struct VulkanInstance {
 
 impl VulkanInstance {
     pub fn new(desc: &InstanceDesc) -> Result<Self, Error> {
-        let engine_name = CString::new(desc.engine_name)?;
-        let application_name = CString::new(desc.application_name)?;
+        let engine_name = CString::new(desc.engine_name.as_str())?;
+        let application_name = CString::new(desc.application_name.as_str())?;
 
         let application_info = vk::ApplicationInfo::default()
             .api_version(vk::API_VERSION_1_3)

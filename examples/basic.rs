@@ -1,5 +1,6 @@
 use bethlehem::*;
 use sdl3::event::Event;
+use std::borrow::Cow;
 
 fn main() {
     let sdl = sdl3::init().unwrap();
@@ -15,8 +16,8 @@ fn main() {
     let instance = Instance::new(&InstanceDesc {
         backend_type: BackendType::Vulkan,
         debug: true,
-        engine_name: "Test Engine",
-        application_name: "Test App",
+        engine_name: Cow::Borrowed("Test Engine"),
+        application_name: Cow::Borrowed("Test App"),
         window_handle: WindowHandle::Sdl(&window),
     })
     .unwrap();

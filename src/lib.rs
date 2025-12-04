@@ -1,7 +1,10 @@
+#![feature(str_as_str)]
+
 mod backend;
 mod device;
 mod instance;
 mod physical_device;
+mod shader_module;
 
 pub use device::*;
 pub use instance::*;
