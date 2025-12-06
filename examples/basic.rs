@@ -7,7 +7,7 @@ fn main() {
     let video_subsystem = sdl.video().unwrap();
 
     let window = video_subsystem
-        .window("Example", 1920, 1080)
+        .window("Example", 1280, 720)
         .position_centered()
         .build()
         .unwrap();
@@ -35,6 +35,11 @@ fn main() {
             physical_device: physical_devices.first().unwrap(),
         })
         .unwrap();
+
+    //Queues
+    let direct_queue = device.get_direct_queue();
+    let compute_queue = device.get_compute_queue();
+    let transfer_queue = device.get_transfer_queue();
 
     let mesh_shader = device
         .create_shader_module(&ShaderDesc {

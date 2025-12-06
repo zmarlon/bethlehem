@@ -1,6 +1,6 @@
 use crate::backend::vulkan::{VulkanPhysicalDevice, VulkanShaderModule};
 use crate::shader_module::ShaderDesc;
-use crate::{Error, ShaderModule, util};
+use crate::{Error, Queue, ShaderModule, util};
 use ash::vk;
 use std::sync::Arc;
 
@@ -38,5 +38,17 @@ impl VulkanDevice {
             self.clone(),
             handle,
         )?))
+    }
+
+    pub fn get_direct_queue(&self) -> Queue {
+        todo!()
+    }
+
+    pub fn get_compute_queue(&self) -> Queue {
+        todo!()
+    }
+
+    pub fn get_transfer_queue(&self) -> Queue {
+        todo!()
     }
 }

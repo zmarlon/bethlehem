@@ -7,7 +7,7 @@ use crate::backend::vulkan::*;
 use crate::backend::metal::*;
 
 use crate::shader_module::ShaderDesc;
-use crate::{Error, ShaderModule};
+use crate::{Error, Queue, ShaderModule};
 
 pub enum Device {
     #[cfg(feature = "vulkan")]
@@ -25,6 +25,36 @@ impl Device {
 
             #[cfg(feature = "metal")]
             Device::Metal(metal_device) => metal_device.create_shader_module(desc),
+        }
+    }
+
+    pub fn get_direct_queue(&self) -> Queue {
+        match self {
+            #[cfg(feature = "vulkan")]
+            Device::Vulkan(vulkan_device) => vulkan_device.get_direct_queue(),
+
+            #[cfg(feature = "metal")]
+            Device::Metal(metal_device) => metal_device.get_direct_queue(),
+        }
+    }
+
+    pub fn get_compute_queue(&self) -> Queue {
+        match self {
+            #[cfg(feature = "vulkan")]
+            Device::Vulkan(vulkan_device) => vulkan_device.get_compute_queue(),
+
+            #[cfg(feature = "metal")]
+            Device::Metal(metal_device) => metal_device.get_compute_queue(),
+        }
+    }
+
+    pub fn get_transfer_queue(&self) -> Queue {
+        match self {
+            #[cfg(feature = "vulkan")]
+            Device::Vulkan(vulkan_device) => vulkan_device.get_transfer_queue(),
+
+            #[cfg(feature = "metal")]
+            Device::Metal(metal_device) => metal_device.get_transfer_queue(),
         }
     }
 

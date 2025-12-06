@@ -4,12 +4,14 @@ mod backend;
 mod device;
 mod instance;
 mod physical_device;
+mod queue;
 mod shader_module;
 mod util;
 
 pub use device::*;
 pub use instance::*;
 pub use physical_device::*;
+pub use queue::*;
 pub use shader_module::*;
 
 use hassle_rs::HassleError;

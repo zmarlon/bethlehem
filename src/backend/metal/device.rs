@@ -1,5 +1,5 @@
 use crate::backend::metal::*;
-use crate::{Error, ShaderDesc, ShaderKind, ShaderModule, util};
+use crate::{Device, Error, Queue, ShaderDesc, ShaderKind, ShaderModule, util};
 use dispatch2::{DispatchData, dispatch_block_t};
 use metal_irconverter::sys;
 use metal_irconverter::sys::{
@@ -113,6 +113,18 @@ impl MetalDevice {
                 library, function, locations,
             )?))
         }
+    }
+
+    pub fn get_direct_queue(&self) -> Queue {
+        todo!()
+    }
+
+    pub fn get_compute_queue(&self) -> Queue {
+        todo!()
+    }
+
+    pub fn get_transfer_queue(&self) -> Queue {
+        todo!()
     }
 }
 
