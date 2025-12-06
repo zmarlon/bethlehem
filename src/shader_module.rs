@@ -3,9 +3,15 @@ use std::borrow::Cow;
 #[cfg(feature = "vulkan")]
 use crate::backend::vulkan::*;
 
+#[cfg(feature = "metal")]
+use crate::backend::metal::*;
+
 pub enum ShaderModule {
     #[cfg(feature = "vulkan")]
     Vulkan(VulkanShaderModule),
+
+    #[cfg(feature = "metal")]
+    Metal(MetalShaderModule),
 }
 
 pub struct ShaderDesc {

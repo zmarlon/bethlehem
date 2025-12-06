@@ -16,6 +16,10 @@ use hassle_rs::HassleError;
 use std::ffi::NulError;
 use thiserror::Error;
 
+#[cfg(feature = "metal")]
+use objc2::rc::Retained;
+use objc2_foundation::NSError;
+
 #[derive(Error, Debug)]
 pub enum Error {
     #[error("No backend found")]
@@ -44,10 +48,24 @@ pub enum Error {
 
     #[error("Hassle rs error: {0}")]
     HassleRs(#[from] HassleError),
+
+    #[cfg(feature = "metal")]
+    #[error("Metal shader converter error: {0}")]
+    MetalShaderConverter(String),
+
+    #[cfg(feature = "metal")]
+    #[error("NS error")]
+    NSError(#[from] Retained<NSError>),
+
+    #[cfg(feature = "metal")]
+    #[error("Metal error")]
+    MetalError(String),
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
 pub enum BackendType {
     #[cfg(feature = "vulkan")]
     Vulkan,
+    #[cfg(feature = "metal")]
+    Metal,
 }

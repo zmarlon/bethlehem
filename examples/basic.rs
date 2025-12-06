@@ -14,7 +14,7 @@ fn main() {
 
     //Api Code
     let instance = Instance::new(&InstanceDesc {
-        backend_type: BackendType::Vulkan,
+        backend_type: BackendType::Metal,
         debug: true,
         engine_name: Cow::Borrowed("Test Engine"),
         application_name: Cow::Borrowed("Test App"),
@@ -59,6 +59,8 @@ fn main() {
             entry_point: "fs_main".into(),
         })
         .unwrap();
+
+    println!("Compiled shaders");
 
     //Game loop
 

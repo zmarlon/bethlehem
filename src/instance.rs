@@ -5,10 +5,16 @@ use std::sync::Arc;
 #[cfg(feature = "vulkan")]
 use crate::backend::vulkan::*;
 
+#[cfg(feature = "metal")]
+use crate::backend::metal::*;
+
 #[derive(Clone)]
 pub enum Instance {
     #[cfg(feature = "vulkan")]
     Vulkan(Arc<VulkanInstance>),
+
+    #[cfg(feature = "metal")]
+    Metal(Arc<MetalInstance>),
 }
 
 impl Instance {
@@ -16,6 +22,9 @@ impl Instance {
         match desc.backend_type {
             #[cfg(feature = "vulkan")]
             BackendType::Vulkan => Ok(Instance::Vulkan(Arc::new(VulkanInstance::new(desc)?))),
+
+            #[cfg(feature = "metal")]
+            BackendType::Metal => Ok(Instance::Metal(Arc::new(MetalInstance::new(desc)?))),
         }
     }
 
@@ -23,6 +32,9 @@ impl Instance {
         match self {
             #[cfg(feature = "vulkan")]
             Instance::Vulkan(vulkan_instance) => vulkan_instance.get_physical_devices(),
+
+            #[cfg(feature = "metal")]
+            Instance::Metal(metal_instance) => metal_instance.get_physical_devices(),
         }
     }
 
@@ -30,13 +42,19 @@ impl Instance {
         match self {
             #[cfg(feature = "vulkan")]
             Instance::Vulkan(vulkan_instance) => vulkan_instance.create_device(desc),
+
+            #[cfg(feature = "metal")]
+            Instance::Metal(metal_instance) => metal_instance.create_device(desc),
         }
     }
 
     pub fn backend(&self) -> BackendType {
         match self {
             #[cfg(feature = "vulkan")]
-            Instance::Vulkan(vulkan_instance) => BackendType::Vulkan,
+            Instance::Vulkan(_) => BackendType::Vulkan,
+
+            #[cfg(feature = "metal")]
+            Instance::Metal(_) => BackendType::Metal,
         }
     }
 }
