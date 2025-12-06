@@ -157,6 +157,9 @@ impl VulkanInstance {
         Ok(Device::Vulkan(Arc::new(VulkanDevice::new(
             desc.physical_device.as_vulkan_physical_device().clone(),
             device,
+            direct_queue_family_index,
+            compute_queue_family_index,
+            transfer_queue_family_index,
         )?)))
     }
 }

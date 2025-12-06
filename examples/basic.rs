@@ -14,7 +14,7 @@ fn main() {
 
     //Api Code
     let instance = Instance::new(&InstanceDesc {
-        backend_type: BackendType::Metal,
+        backend_type: BackendType::Vulkan,
         debug: true,
         engine_name: Cow::Borrowed("Test Engine"),
         application_name: Cow::Borrowed("Test App"),
