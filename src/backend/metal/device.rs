@@ -1,5 +1,6 @@
 use crate::backend::metal::*;
-use crate::{Device, Error, Queue, ShaderDesc, ShaderKind, ShaderModule, util};
+use crate::backend::metal::*;
+use crate::{Error, Queue, ShaderDesc, ShaderKind, ShaderModule, util};
 use dispatch2::{DispatchData, dispatch_block_t};
 use metal_irconverter::sys;
 use metal_irconverter::sys::{
@@ -10,18 +11,48 @@ use metal_irconverter::sys::{
     IRShaderStage_IRShaderStageVertex,
 };
 use objc2_foundation::NSString;
-use objc2_metal::{MTLDevice, MTLLibrary};
+use objc2_metal::{MTL4CommandQueueDescriptor, MTLDevice, MTLLibrary};
 use std::ffi::CString;
 use std::ptr::NonNull;
 use std::sync::Arc;
 
 pub struct MetalDevice {
     physical_device: Arc<MetalPhysicalDevice>,
+
+    direct_queue: Arc<MetalQueue>,
+    compute_queue: Arc<MetalQueue>,
+    transfer_queue: Arc<MetalQueue>,
 }
 
 impl MetalDevice {
     pub fn new(physical_device: Arc<MetalPhysicalDevice>) -> Result<Self, Error> {
-        Ok(Self { physical_device })
+        let direct_queue_descriptor = MTL4CommandQueueDescriptor::new();
+        direct_queue_descriptor.setLabel(Some(&NSString::from_str("Direct queue")));
+
+        let direct_queue = physical_device
+            .mtl_device
+            .newMTL4CommandQueueWithDescriptor_error(&direct_queue_descriptor)?;
+
+        let compute_queue_descriptor = MTL4CommandQueueDescriptor::new();
+        compute_queue_descriptor.setLabel(Some(&NSString::from_str("Compute queue")));
+
+        let compute_queue = physical_device
+            .mtl_device
+            .newMTL4CommandQueueWithDescriptor_error(&compute_queue_descriptor)?;
+
+        let transfer_queue_descriptor = MTL4CommandQueueDescriptor::new();
+        transfer_queue_descriptor.setLabel(Some(&NSString::from_str("Transfer queue")));
+
+        let transfer_queue = physical_device
+            .mtl_device
+            .newMTL4CommandQueueWithDescriptor_error(&transfer_queue_descriptor)?;
+
+        Ok(Self {
+            physical_device,
+            direct_queue: Arc::new(MetalQueue::new(direct_queue)?),
+            compute_queue: Arc::new(MetalQueue::new(compute_queue)?),
+            transfer_queue: Arc::new(MetalQueue::new(transfer_queue)?),
+        })
     }
 
     pub fn create_shader_module(
@@ -116,15 +147,15 @@ impl MetalDevice {
     }
 
     pub fn get_direct_queue(&self) -> Queue {
-        todo!()
+        Queue::Metal(self.direct_queue.clone())
     }
 
     pub fn get_compute_queue(&self) -> Queue {
-        todo!()
+        Queue::Metal(self.compute_queue.clone())
     }
 
     pub fn get_transfer_queue(&self) -> Queue {
-        todo!()
+        Queue::Metal(self.transfer_queue.clone())
     }
 }
 
